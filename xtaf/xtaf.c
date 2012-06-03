@@ -34,7 +34,7 @@
 #include "xtaf_endian.h"
 
 // debug message
-#define XTAF_DEBUG 1
+#define XTAF_DEBUG 0
 
 #define DIR_SEPARATOR '/'
 
@@ -405,7 +405,7 @@ static DISC_INTERFACE* get_io_ata(void) {
 }
 #endif
 
-int XTATMount() {
+int XTAFMount() {
 	DISC_INTERFACE* disc = get_io_ata();
 
 	return xtaf_init(&ctx, disc);

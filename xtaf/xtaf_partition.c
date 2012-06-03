@@ -102,26 +102,84 @@ int xtaf_init_fs(struct xtaf_partition_private *partition) {
 	// ???
 	partition->rootDirStart = partition->fat_offset + partition->fat_file_size + partition->partition_start_offset;
 	partition->dataStart = partition->fat_offset + partition->fat_file_size + partition->partition_start_offset;
-	
+        
 	print_partition_information(partition);
 
 	return 0;
 }
 
 /** return 0 if hdd is retail, 1 if is hdd is devkit **/
-int xtaf_check_hdd_type() {
-	// read start of hdd
-	/*
-		if (raw_read(pCtx, 0)) {
-			uint32_t * hdd_hdr = (uint32_t *) raw_buf;
-			if (hdd_hdr[0] == 0) {
-				return 0;
-			}
-			return 1;
-		}
-		//failed
-		return -1;
-	 */
+int check_devkit_hdd(DISC_INTERFACE * disc) {
+    
+        bool err;
+        uint32_t start_sector = 0;
+        uint32_t *sectorBuffer = (uint32_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
+    
+        typedef struct xdk_partition_table {
+           uint32_t magic;
+           uint32_t unknown;
+	   uint32_t content_offset;
+	   uint32_t content_length;
+           uint32_t dashboard_offset;
+           uint32_t dashboard_length;
+        } xdk_partition_table;
+                
+        err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
+        if (err == 0)  {
+            printf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
+            return -1;
+        }
+        
+        struct xdk_partition_table *xdk = (struct xdk_partition_table*) sectorBuffer;
+        
+        printf("Magic: 0x%08X\n",xdk->magic);
+        printf("should be zero: 0x%08X\n",xdk->unknown);
+        printf("content partition at: 0x%08X\n",xdk->content_offset);
+        printf("length: %08X\n",xdk->content_length);
+        printf("dashboard partition at: 0x%08X\n",xdk->dashboard_offset);
+        printf("length: %08X\n",xdk->dashboard_length);
+        
+        if (xdk->magic == 0x00020000) {
+            printf("Found DEVKIT TABLE probably..\n");
+        } else {
+            printf("No DEVKIT_TABLE found... Aborting!\n");
+            return -1;
+        }
+        
+        start_sector = xdk->content_offset;
+        
+        err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
+        if (err == 0)  {
+            printf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
+            return -1;
+        }
+            
+        if (memcmp(sectorBuffer, "XTAF", 4)){
+            printf("No XTAF Magic at content partition offset!\n");
+            return -1;
+        }
+        // check for XTAF MAGIC @ content
+        //check for XTAF MAGIC @ dashboard
+        start_sector = xdk->dashboard_offset;
+        
+        err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
+        if (err == 0)  {
+            printf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
+            return -1;
+        }
+            
+        if (memcmp(sectorBuffer, "XTAF", 4)){
+            printf("No XTAF Magic at dashboard partition offset!\n");
+            return -1;
+        }
+        
+        // Assign new partition values
+        partition_table[0].offset = (uint64_t) xdk->content_offset * XENON_DISK_SECTOR_SIZE;
+        partition_table[0].length = (uint64_t) xdk->content_length * XENON_DISK_SECTOR_SIZE;
+        partition_table[1].offset = (uint64_t) xdk->dashboard_length * XENON_DISK_SECTOR_SIZE;
+        partition_table[1].length = (uint64_t) xdk->dashboard_length * XENON_DISK_SECTOR_SIZE;
+
+        
 	return 0;
 }
 
@@ -210,22 +268,18 @@ int xtaf_init(struct xtaf_context *ctx, DISC_INTERFACE * disc) {
 		xprintf("disc is nulll\r\n\r\n");
 	}
 	
+
 	// start disc
 	disc->startup();
 
-	int err;
 	int partition_nbr = 0;
 
-	int is_devkit_hdd = xtaf_check_hdd_type();
-
-	if (is_devkit_hdd == 1) {
-		printf("Devkit hdd not supported\r\n");
-		return -1;
-	}
+	if (check_devkit_hdd(disc) == 1)
+		printf("DEVKIT HDD detected!\r\n");
+        
+        uint8_t *sectorBuffer = (uint8_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
 
 	int found = 0;
-
-	uint8_t *sectorBuffer = (uint8_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
 
 	// use only 1 parition for now ...
 	while (1) {

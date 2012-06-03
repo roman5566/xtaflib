@@ -4,7 +4,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-int XTATMount();
+int XTAFMount();
 
 #ifdef __cplusplus
 }

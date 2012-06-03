@@ -234,4 +234,4 @@ int xtaf_dirclose_r(struct _reent *r, DIR_ITER *dirState);
 int xtaf_parse_entry(xtaf_partition_private * priv, struct _xtaf_directory_s * data);
 
 
-int XTATMount();
+int XTAFMount();
