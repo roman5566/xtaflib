@@ -174,14 +174,14 @@ static void buffer_dump(void * buf, int size) {
 	int i;
 	char* cbuf = (char*) buf;
 
-	printf("---- %p %d\n", buf, size);
+	xprintf("---- %p %d\n", buf, size);
 
 	while (size > 0) {
 		for (i = 0; i < 16; ++i) {
-			printf("%02x ", *cbuf);
+			xprintf("%02x ", *cbuf);
 			++cbuf;
 		}
-		printf("\n");
+		xprintf("\n");
 		size -= 16;
 	}
 }
@@ -255,7 +255,7 @@ if (tt[0] == 0) {
 	return 0;
 }
 		 */
-		//printf("parse_path %s\r\n",tt);
+		//xprintf("parse_path %s\r\n",tt);
 		while (1) {
 			// browse the fat
 			//int err = xtaf_parse_entry(priv, &pCtx->finfo);
@@ -273,7 +273,7 @@ if (tt[0] == 0) {
 				return -1;
 			}
 
-			//printf("%")
+			//xprintf("%")
 
 			// check if the wanted file/dir is the same as the found one
 			if (xtaf_check_filename(fat_name, (char*) file_private->entryInfo.filename, file_private->entryInfo.filename_size) == 0) {
@@ -335,7 +335,7 @@ if (tt[0] == 0) {
 	return 0;
 }
 		 */
-		//printf("parse_path %s\r\n",tt);
+		//xprintf("parse_path %s\r\n",tt);
 
 
 		while (1) {
@@ -354,7 +354,7 @@ if (tt[0] == 0) {
 				return -1;
 			}
 
-			//printf("%")
+			//xprintf("%")
 
 			// check if the wanted file/dir is the same as the found one
 			if (xtaf_check_filename(fat_name, (char*) entry->entryInfo.filename, entry->entryInfo.filename_size) == 0) {

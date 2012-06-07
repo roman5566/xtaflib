@@ -100,7 +100,7 @@ int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct 
 
 		st->st_mode = state->entryInfo.flags&0x10?S_IFDIR:S_IFREG;		
 		
-		//printf("mode %02x\n", st->st_mode);
+		//xprintf("mode %02x\n", st->st_mode);
 		
 		st->st_atime = xtaf_build_time(state->entryInfo.access_date, state->entryInfo.access_time);
 		st->st_ctime = xtaf_build_time(state->entryInfo.creation_date, state->entryInfo.creation_time);

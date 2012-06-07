@@ -126,7 +126,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
                 
         err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
         if (err == 0)  {
-            printf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
+            xprintf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
             return -1;
         }
         
@@ -140,7 +140,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         
         err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
         if (err == 0)  {
-            printf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
+            xprintf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
             return -1;
         }
             
@@ -154,7 +154,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         
         err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
         if (err == 0)  {
-            printf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
+            xprintf("ERROR: Failed to read @ sec: %u / off: %08X",start_sector,((uint64_t)start_sector * XENON_DISK_SECTOR_SIZE));
             return -1;
         }
             
@@ -241,7 +241,7 @@ xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t
 
 	err =  AddDevice (devops);
 	
-	printf("err = %d\r\n",err);
+	xprintf("err = %d\r\n",err);
 
 	return partition;
 }
@@ -265,7 +265,7 @@ int xtaf_init(struct xtaf_context *ctx, DISC_INTERFACE * disc) {
 	int partition_nbr = 0;
 
 	if (check_devkit_hdd(disc) == 1)
-		printf("DEVKIT HDD detected!\r\n");
+		xprintf("DEVKIT HDD detected!\r\n");
         
         uint8_t *sectorBuffer = (uint8_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
 
