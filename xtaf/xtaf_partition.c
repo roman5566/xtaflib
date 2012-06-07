@@ -166,7 +166,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         // Assign new partition values
         partition_table[0].offset = (uint64_t) xdk->content_offset * XENON_DISK_SECTOR_SIZE;
         partition_table[0].length = (uint64_t) xdk->content_length * XENON_DISK_SECTOR_SIZE;
-        partition_table[1].offset = (uint64_t) xdk->dashboard_length * XENON_DISK_SECTOR_SIZE;
+        partition_table[1].offset = (uint64_t) xdk->dashboard_offset * XENON_DISK_SECTOR_SIZE;
         partition_table[1].length = (uint64_t) xdk->dashboard_length * XENON_DISK_SECTOR_SIZE;
 
         
