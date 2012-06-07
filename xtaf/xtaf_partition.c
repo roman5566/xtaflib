@@ -113,7 +113,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
     
         bool err;
         uint32_t start_sector = 0;
-        uint32_t *sectorBuffer = (uint32_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
+        uint8_t *sectorBuffer = (uint8_t*) _XTAF_mem_allocate(XENON_DISK_SECTOR_SIZE);
     
         typedef struct xdk_partition_table {
            uint32_t magic;
@@ -132,20 +132,10 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         
         struct xdk_partition_table *xdk = (struct xdk_partition_table*) sectorBuffer;
         
-        printf("Magic: 0x%08X\n",xdk->magic);
-        printf("should be zero: 0x%08X\n",xdk->unknown);
-        printf("content partition at: 0x%08X\n",xdk->content_offset);
-        printf("length: %08X\n",xdk->content_length);
-        printf("dashboard partition at: 0x%08X\n",xdk->dashboard_offset);
-        printf("length: %08X\n",xdk->dashboard_length);
-        
-        if (xdk->magic == 0x00020000) {
-            printf("Found DEVKIT TABLE probably..\n");
-        } else {
-            printf("No DEVKIT_TABLE found... Aborting!\n");
-            return -1;
-        }
-        
+        if (xdk->magic != 0x00020000)
+			return -1;
+			
+        // check for XTAF MAGIC @ content
         start_sector = xdk->content_offset;
         
         err = _XTAF_disc_readSectors(disc,start_sector,1,sectorBuffer);
@@ -155,10 +145,10 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         }
             
         if (memcmp(sectorBuffer, "XTAF", 4)){
-            printf("No XTAF Magic at content partition offset!\n");
+            xprintf("No XTAF Magic at content partition offset!\n");
             return -1;
         }
-        // check for XTAF MAGIC @ content
+
         //check for XTAF MAGIC @ dashboard
         start_sector = xdk->dashboard_offset;
         
@@ -169,7 +159,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         }
             
         if (memcmp(sectorBuffer, "XTAF", 4)){
-            printf("No XTAF Magic at dashboard partition offset!\n");
+            xprintf("No XTAF Magic at dashboard partition offset!\n");
             return -1;
         }
         
