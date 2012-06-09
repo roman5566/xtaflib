@@ -132,8 +132,10 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         
         struct xdk_partition_table *xdk = (struct xdk_partition_table*) sectorBuffer;
         
-        if (xdk->magic != 0x00020000)
-			return -1;
+        if (xdk->magic != 0x00020000){
+			xprintf("No Devkit partition table magic found!\n");
+			return 0;
+		}
 			
         // check for XTAF MAGIC @ content
         start_sector = xdk->content_offset;
@@ -170,7 +172,7 @@ int check_devkit_hdd(DISC_INTERFACE * disc) {
         partition_table[1].length = (uint64_t) xdk->dashboard_length * XENON_DISK_SECTOR_SIZE;
 
         
-	return 0;
+	return 1;
 }
 
 xtaf_partition_private * xtaf_mount(void * disc, uint32_t start_sector, uint32_t num_sectors, uint32_t cacheSize, uint32_t sectorsPerPage, uint8_t *sectorBuffer ) {
