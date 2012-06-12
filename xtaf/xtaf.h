@@ -200,7 +200,7 @@ typedef struct xtaf_partition_table {
 
 int xtaf_check_filename(const char *s1, const char *s2, size_t n);
 
-extern xtaf_partition_table partition_table[3];
+extern xtaf_partition_table partition_table[5];
 
 #define RAW_BUF 0x200
 #define MAX_SECTS 8
