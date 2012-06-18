@@ -215,10 +215,13 @@ int xtaf_parse_entry(xtaf_partition_private * priv, struct _xtaf_directory_s * d
 		data->file_size = host2be32(data->file_size);
 		data->starting_cluster = host2be32(data->starting_cluster);
 
-		//end of table
+		//end of table or deleted file
 		if (data->filename_size == 0xFF) {
 			//XTAFError("xtaf_parse_entry : not an entry\r\n"); // not an error
 			return 1;
+		} else if (data->filename_size == 0xE5){
+			xprintf("xtaf_parse_entry : deleted file/dir ... \n");
+			return -1;
 		} else {
 			data->filename[data->filename_size] = 0;
 		}
