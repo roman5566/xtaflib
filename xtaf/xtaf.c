@@ -22,15 +22,6 @@
 //	http://nds.cmamod.com/x360/test/MSFTMemoryUnit.7z
 //	http://free60.git.sourceforge.net/git/gitweb.cgi?p=free60/libxenon;a=blob_plain;f=libxenon/drivers/fat/fat.c;h=ebdabb029fc6d9693eb196b620df697ad4c70d65;hb=refs/heads/ced2911
 
-#define XBOX_1_COMPATIBILY_PARTITION 0x120eb0000
-#define XBOX_1_COMPATIBILY_PARTITION_SIZE 0x10000000
-#define XBOX_360_DEVKIT_PARTITION	0xA17D0000
-#define MU1_PARTITION	0x7FF000
-#define MU_SIZE 243273728
-#define XBOX_360_PARTITION 0x130eb0000 // HDD1 partition
-#define XBOX_360_PARTITION_SIZE 0x1AC1AC6000//(0x0DF94BB0*0x200)-0x130eb0000
-
-
 #include "xtaf_endian.h"
 
 // debug message
