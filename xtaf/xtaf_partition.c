@@ -44,8 +44,8 @@ static const devoptab_t dotab_xtaf = {
 };
 
 xtaf_partition_table partition_table[5] = {
-	{"hdd0", 0x120eb0000, 0x10000000}, // Xbox 1 Backwards Compatibility
-	{"hdd1", 0x130eb0000, 0}, // 360
+	{"hdd0", 0x130eb0000, 0}, // 360
+	{"hdd1", 0x120eb0000, 0x10000000}, // Xbox 1 Backwards Compatibility
 	{"ext1", 0x10c080000, 0xce30000 }, // System Extended
 	{"ext2", 0x118eb0000, 0x8000000 }, // System Extended 2
 	{"null", 0, 0}// End
