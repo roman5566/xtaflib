@@ -250,7 +250,7 @@ int xtaf_stat_r(struct _reent *r, const char *path, struct stat *st) {
 	xtaf_file_private* file = (xtaf_file_private*) malloc(sizeof (xtaf_file_private));
 
 	int fd = xtaf_open_r(r, file, path, O_RDONLY, 0);
-	if (fd) {
+	if (fd > 0) {
 		xtaf_fstat_r(r, fd, st);
 
 		xtaf_close_r(r, fd);
