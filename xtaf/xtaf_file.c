@@ -38,8 +38,21 @@ static xtaf_partition_private* getPartitionFromPath(const char* path) {
 }
 
 /** build a date time **/
-static inline time_t xtaf_build_time(uint16_t date, uint32_t time) {
-	return 0;
+time_t xtaf_build_time(uint16_t d, uint32_t t) {
+	struct tm timeParts;
+
+	timeParts.tm_hour = t >> 11;
+	timeParts.tm_min = (t >> 5) & 0x3F;
+	timeParts.tm_sec = (t & 0x1F) << 1;
+	
+	timeParts.tm_mday = d & 0x1F;
+	timeParts.tm_mon = ((d >> 5) & 0x0F) - 1;
+	timeParts.tm_year = (d >> 9) + 80;
+	
+	timeParts.tm_isdst = 0;
+	printf("xtaf_build_time %04x - %04x\n", d, t);
+	
+	return mktime(&timeParts);
 }
 
 off_t xtaf_seek_r (struct _reent *r, int fd, off_t pos, int dir) {
@@ -158,7 +171,7 @@ int xtaf_fstat_r(struct _reent *r, int fd, struct stat *st) {
 	st->st_atime = xtaf_build_time(file->entryInfo.access_date, file->entryInfo.access_time);
 	st->st_ctime = xtaf_build_time(file->entryInfo.creation_date, file->entryInfo.creation_time);
 	st->st_mtime = xtaf_build_time(file->entryInfo.update_date, file->entryInfo.update_time);
-
+	printf("ttt\n");
 	return 0;
 }
 
@@ -252,8 +265,10 @@ int xtaf_stat_r(struct _reent *r, const char *path, struct stat *st) {
 	int fd = xtaf_open_r(r, file, path, O_RDONLY, 0);
 	if (fd > 0) {
 		xtaf_fstat_r(r, fd, st);
-
 		xtaf_close_r(r, fd);
+	}
+	else {
+		return fd;
 	}
 
 	return 0;

@@ -233,5 +233,6 @@ int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct 
 int xtaf_dirclose_r(struct _reent *r, DIR_ITER *dirState);
 int xtaf_parse_entry(xtaf_partition_private * priv, struct _xtaf_directory_s * data);
 
+time_t xtaf_build_time(uint16_t d, uint32_t t);
 
 int XTAFMount();

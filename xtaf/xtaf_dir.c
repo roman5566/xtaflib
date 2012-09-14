@@ -75,11 +75,6 @@ DIR_ITER* xtaf_diropen_r(struct _reent *r, DIR_ITER *dirState, const char *path)
 
 }
 
-/** build a date time **/
-static inline time_t xtaf_build_time(uint16_t date, uint32_t time) {
-	return 0;
-}
-
 int xtaf_dirnext_r(struct _reent *r, DIR_ITER *dirState, char *filename, struct stat *st) {
 	xtaf_dir_entry * state = dirState->dirStruct;
 	xtaf_partition_private * partition = state->partition;
