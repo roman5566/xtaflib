@@ -50,7 +50,6 @@ time_t xtaf_build_time(uint16_t d, uint32_t t) {
 	timeParts.tm_year = (d >> 9) + 80;
 	
 	timeParts.tm_isdst = 0;
-	printf("xtaf_build_time %04x - %04x\n", d, t);
 	
 	return mktime(&timeParts);
 }
