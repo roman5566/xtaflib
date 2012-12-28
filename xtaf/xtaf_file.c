@@ -170,7 +170,6 @@ int xtaf_fstat_r(struct _reent *r, int fd, struct stat *st) {
 	st->st_atime = xtaf_build_time(file->entryInfo.access_date, file->entryInfo.access_time);
 	st->st_ctime = xtaf_build_time(file->entryInfo.creation_date, file->entryInfo.creation_time);
 	st->st_mtime = xtaf_build_time(file->entryInfo.update_date, file->entryInfo.update_time);
-	printf("ttt\n");
 	return 0;
 }
 
